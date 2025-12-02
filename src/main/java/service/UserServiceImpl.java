@@ -2,23 +2,23 @@ package service;
 
 import dao.UserDao;
 import model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
-@Transactional
-public class UserServiceImpl implements service.UserService {
+@Transactional(readOnly = true)
+public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
-    @Autowired
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
+    @Transactional
     public void createUser(String name, String lastName, Integer age) {
         validateUserData(name, lastName, age);
         User user = new User(name, lastName, age);
@@ -26,6 +26,7 @@ public class UserServiceImpl implements service.UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(Long id, String name, String lastName, Integer age) {
         validateUserData(name, lastName, age);
 
@@ -42,6 +43,7 @@ public class UserServiceImpl implements service.UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         User user = userDao.getUserById(id);
         if (user == null) {
